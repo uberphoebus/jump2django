@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseNotAllowed
 from django.utils import timezone
 from pybo.models import Question
+from pybo.forms import QuestionForm, AnswerForm
 
 # Create your views here.
 def index(request):
@@ -8,6 +10,7 @@ def index(request):
     question_list = Question.objects.order_by('-create_date')
     context = {'question_list': question_list}
     return render(request=request, template_name='pybo/question_list.html', context=context)
+
 
 def detail(request, question_id):
     # question = Question.objects.get(id=question_id)
@@ -19,5 +22,34 @@ def detail(request, question_id):
 
 def answer_create(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    question.answer_set.create(content=request.POST.get('content'), create_date=timezone.now()) # type: ignore
-    return redirect('pybo:detail', question_id=question.id)  # type: ignore
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.create_date = timezone.now()
+            answer.question = question
+            answer.save()
+            return redirect('pybo:detail', question_id=question.id) # type: ignore
+    else:
+        return HttpResponseNotAllowed('Only POST is possible.')
+    context = {'question': question, 'form': form}
+    return render(request, 'pybo/question_detail.html', context=context)
+
+
+def question_create(request):
+    # POST 방식일 때 : 질문 폼 저장하기
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False) # 임시저장
+            question.create_date = timezone.now()
+            question.save()
+            return redirect('pybo:index')
+    
+    # GET 방식일 때 : 질문 등록하기
+    else:
+        form = QuestionForm()
+    context = {'form': form}
+    return render(request, 'pybo/question_form.html', context=context)
+
+
