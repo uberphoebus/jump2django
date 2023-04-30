@@ -6,6 +6,7 @@ from pybo.models import Question
 
 
 def index(request):
+    3 / 0
     page = request.GET.get('page', '1') # 페이지
     kw = request.GET.get('kw', '') # 검색어
     # 순방향 create_date / 역방향 -create_date
