@@ -1,5 +1,6 @@
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+{% extends 'base.html' %}
+
+{% block content %}
 
 <!-- 게시판 -->
 <div class="container my-3">
@@ -30,3 +31,5 @@
         </tbody>
     </table>
 </div>
+
+{% endblock %}
