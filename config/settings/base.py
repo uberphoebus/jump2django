@@ -185,8 +185,8 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django': {
-            'handlers': ['console', 'mail_admins', 'file'],
+        'pybo': {
+            'handlers': ['console', 'file'],
             'level': 'INFO',
         },
         'django.server': {
