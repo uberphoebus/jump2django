@@ -1,7 +1,7 @@
 import environ
 from config.settings.base import *
 
-ALLOWED_HOSTS = ['3.34.50.123']
+ALLOWED_HOSTS = ['3.34.50.123', 'uberphoebus.me']
 STATIC_ROOT = BASE_DIR / 'static/'
 STATICFILES_DIRS = []
 DEBUG = False
